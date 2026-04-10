@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import SearchBar from '@/components/SearchBar';
 import LetterNavigation from '@/components/LetterNavigation';
 import PdfCard from '@/components/PdfCard';
+import Footer from '@/components/Footer';
 import type { PDFFile } from '@/lib/pdfs';
 
 interface PDFsByLetter {
@@ -26,6 +27,8 @@ export default function Home() {
         const data = await response.json();
         setPdfs(data);
         setLetters(Object.keys(data).sort());
+        // Select letter 'A' by default
+        setSelectedLetter('A');
       } catch (error) {
         console.error('Error loading PDFs:', error);
       } finally {
@@ -74,8 +77,9 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-white to-[#F5F7F0]">
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900">Apellidos</h1>
@@ -115,11 +119,11 @@ export default function Home() {
 
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#8BBB46] border-t-transparent" />
             </div>
           ) : filteredPdfs.length === 0 ? (
-            <div className="rounded-lg border border-gray-300 bg-white p-8 text-center">
-              <p className="text-gray-600">
+            <div className="rounded-lg border border-[#BEBBB2] bg-white p-8 text-center">
+              <p className="text-[#BEBBB2]">
                 {searchQuery
                   ? 'No se encontraron resultados.'
                   : 'No hay apellidos disponibles.'}
@@ -138,7 +142,9 @@ export default function Home() {
             </div>
           )}
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
