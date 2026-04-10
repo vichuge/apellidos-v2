@@ -33,15 +33,20 @@ export async function getPDFsByLetter(): Promise<PDFsByLetter> {
 
     result[letter] = files
       .filter((f) => !f.endsWith('.pdf:Zone.Identifier'))
+      .filter((f) => !f.startsWith('._'))
       .filter((f) => f.includes('-clean.pdf'))
       .map((filename) => {
-        const name = filename
+        let name = filename
           .replace('-clean.pdf', '')
           .replace('.pdf', '')
-          .replace(/_/g, ' ');
+          .replace(/_/g, ' ')
+          .trim();
+
+        // Capitalize first letter and ensure it's properly formatted
+        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
         return {
-          name: name.charAt(0).toUpperCase() + name.slice(1),
+          name,
           filename,
           letter,
           isClean: true,

@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const letter = searchParams.get('letter');
   const filename = searchParams.get('filename');
+  const inline = searchParams.get('inline') === 'true';
 
   if (!letter || !filename) {
     return NextResponse.json(
@@ -41,7 +42,10 @@ export async function GET(request: NextRequest) {
     const fileBuffer = fs.readFileSync(filePath);
     const response = new NextResponse(fileBuffer);
     response.headers.set('Content-Type', 'application/pdf');
-    response.headers.set('Content-Disposition', `attachment; filename="${filename}"`);
+    
+    // Use 'inline' to display in browser, 'attachment' to download
+    const disposition = inline ? 'inline' : 'attachment';
+    response.headers.set('Content-Disposition', `${disposition}; filename="${filename}"`);
     response.headers.set('Cache-Control', 'public, max-age=31536000');
 
     return response;
